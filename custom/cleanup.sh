@@ -9,10 +9,17 @@
 #
 ### END OF TOKENS
 
+timerStart=$SECONDS
+timeOut=300
 until [[ `netstat -tulpn | grep ##MARIADB_PORT## | grep LISTEN` ]];
   do
     echo "Waiting for port ##MARIADB_PORT##";
     sleep 2;
+    
+    if [[ $(( SECONDS - timerStart )) -gt $timeOut ]]; then \
+      echo "Timeout has reached" && exit 1;
+    fi
+    
   done
 echo "Port ##MARIADB_PORT## has opened!"
 
